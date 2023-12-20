@@ -1,0 +1,30 @@
+# Docker Multi Stage Build
+FROM node:20.9.0-alpine as builder
+
+# 작업 디렉토리 설정
+WORKDIR /app
+
+# package.json 및 package-lock.json 복사
+COPY ./package.json /app
+COPY ./package-lock.json /app
+
+# 종속성 설치
+RUN npm install
+
+# NestJS CLI 전역 설치
+RUN npm i -g @nestjs/cli
+
+# 소스 코드 복사
+COPY . .
+
+# 빌드
+RUN npm run build
+
+FROM node:20.9.0-alpine
+
+# 작업 디렉토리 설정
+WORKDIR /app
+
+# Builder 스테이지에서 빌드된 dist 및 node_modules 복사
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/node_modules /app/node_modules
