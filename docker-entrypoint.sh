@@ -1,2 +1,2 @@
 npx prisma migrate deploy
-node dist/src/main.js
+node dist/main.js
