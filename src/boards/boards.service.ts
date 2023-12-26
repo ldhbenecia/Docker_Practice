@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
+import { BoardRepository } from './boards.repository';
+import { Boards } from '@prisma/client';
 
 @Injectable()
 export class BoardsService {
-  create(createBoardDto: CreateBoardDto) {
-    return 'This action adds a new board';
+  constructor(private boardRepository: BoardRepository) {}
+  async create(createBoardDto: CreateBoardDto) {
+    return this.boardRepository.create(createBoardDto);
   }
 
-  findAll() {
-    return `This action returns all boards`;
+  async findAll(): Promise<Boards[]> {
+    return this.boardRepository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} board`;
+  async findOne(id: number): Promise<Boards> {
+    return this.boardRepository.findOne(id);
   }
 
-  update(id: number, updateBoardDto: UpdateBoardDto) {
-    return `This action updates a #${id} board`;
+  async update(id: number, updateBoardDto: UpdateBoardDto): Promise<Boards> {
+    return this.boardRepository.update(id, updateBoardDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} board`;
+  async remove(id: number): Promise<void> {
+    return this.boardRepository.remove(id);
   }
 }
